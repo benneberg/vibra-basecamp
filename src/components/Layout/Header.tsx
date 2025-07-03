@@ -1,13 +1,14 @@
-import { Code2, Settings, Plus } from "lucide-react";
+import { Code2, Settings, Plus, Workflow } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface HeaderProps {
   currentProject?: string;
   onCreateProject: () => void;
   onOpenSettings: () => void;
+  onOpenWorkflow: () => void;
 }
 
-export const Header = ({ currentProject, onCreateProject, onOpenSettings }: HeaderProps) => {
+export const Header = ({ currentProject, onCreateProject, onOpenSettings, onOpenWorkflow }: HeaderProps) => {
   return (
     <header className="glass border-b border-glass-border p-4 flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -25,6 +26,15 @@ export const Header = ({ currentProject, onCreateProject, onOpenSettings }: Head
       </div>
       
       <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onOpenWorkflow}
+          className="glass-hover"
+        >
+          <Workflow className="w-4 h-4 mr-2" />
+          Workflow
+        </Button>
         <Button
           variant="ghost"
           size="sm"

@@ -5,11 +5,12 @@ import { CreateProject } from "@/components/ProjectManagement/CreateProject";
 import { ChatView, ChatMessage } from "@/components/AIAssistant/ChatView";
 import { RenderPanel } from "@/components/CodeRenderer/RenderPanel";
 import { SettingsPage, AISettings } from "@/components/Settings/SettingsPage";
+import { WorkflowSection } from "@/components/Workflow/WorkflowSection";
 import { LocalStorageService } from "@/services/localStorage";
 import { GroqAPIService, GroqMessage } from "@/services/groqAPI";
 import { useToast } from "@/hooks/use-toast";
 
-type AppView = 'projects' | 'create-project' | 'chat' | 'settings';
+type AppView = 'projects' | 'create-project' | 'chat' | 'settings' | 'workflow';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<AppView>('projects');
@@ -262,6 +263,9 @@ const Index = () => {
           />
         );
       
+      case 'workflow':
+        return <WorkflowSection />;
+      
       default:
         return null;
     }
@@ -273,6 +277,7 @@ const Index = () => {
         currentProject={currentProject?.name}
         onCreateProject={() => setCurrentView('create-project')}
         onOpenSettings={() => setCurrentView('settings')}
+        onOpenWorkflow={() => setCurrentView('workflow')}
       />
       
       <main className="flex-1 overflow-hidden">
