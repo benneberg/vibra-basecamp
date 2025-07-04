@@ -1,73 +1,109 @@
-# Welcome to your Lovable project
+# AI Developer Toolbox
 
-## Project info
+A modern, AI-powered developer toolbox for code generation, debugging, web design, and documentation.
 
-**URL**: https://lovable.dev/projects/0172e4c7-2800-4362-9313-753d1fb558c2
+The AI Developer Toolbox is a mobile-first web application that leverages the high-speed Groq API to provide developers with a powerful suite of AI-driven tools. The interface is designed with a sleek, glassmorphism and Web3 aesthetic, built with Tailwind CSS for a responsive and visually stunning experience.
 
-## How can I edit this code?
+## **Features**
 
-There are several ways of editing your application.
+* **Project Management:** Create, list, and delete projects with ease. All project data is securely stored in your browser's local storage.
+* **Contextual AI Chat:** An intuitive chat interface allows you to interact with the AI. You can add local files, directories, or URLs to the project's context for more accurate and relevant AI responses.
+* **AI-Powered Actions:**
+    * **Generate Code:** Instruct the AI to write code in various programming languages.
+    * **Debug Code:** Get expert assistance in identifying and fixing bugs in your code.
+    * **Generate Web Design:** Describe a web design, and the AI will generate the HTML and CSS for you.
+    * **Create Documentation:** Automatically generate Markdown documentation and manuals from your code.
+* **Chat History:** All conversations are saved in local storage, specific to each project, so you can easily reference past interactions.
+* **Code Render Panel:** Instantly preview AI-generated HTML, CSS, and JavaScript code in a dedicated render panel.
+* **AI Settings:** Customize the AI's parameters, including system prompts, temperature, AI model, and max tokens per second, to fine-tune its performance.
 
-**Use Lovable**
+## **Future Enhancements**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/0172e4c7-2800-4362-9313-753d1fb558c2) and start prompting.
+The AI Developer Toolbox is designed to be a constantly evolving platform. Here are some of the features planned for future releases:
 
-Changes made via Lovable will be committed automatically to this repo.
+* **Chrome Extension & PWA:** For enhanced accessibility and offline capabilities.
+* **Version Control Integration:** Seamlessly manage your code with Git integration.
+* **Real-time Collaboration:** Work on projects with your team in real-time.
+* **Plugin Architecture:** Extend the app's functionality with community-built plugins and integrations.
+* **Advanced Debugging Tools:** Integrate a step-through debugger and other advanced debugging features for a more powerful debugging experience.
+* **Deployment Integration:** Deploy your projects directly to your favorite hosting provider without leaving the app.
+* **Cloud Storage Sync:** Sync your projects and settings across multiple devices using cloud storage solutions.
 
-**Use your preferred IDE**
+## **Code Structure**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+The application is structured to be modular and easily extensible, making it simple to add new features in the future.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+/
+|-- public/
+|   |-- index.html
+|   |-- styles.css
+|-- src/
+|   |-- components/
+|   |   |-- AIAssistant/
+|   |   |   |-- ChatView.js
+|   |   |   |-- HistoryView.js
+|   |   |-- CodeRenderer/
+|   |   |   |-- RenderPanel.js
+|   |   |-- Layout/
+|   |   |   |-- Header.js
+|   |   |   |-- Sidebar.js
+|   |   |   |-- Footer.js
+|   |   |-- ProjectManagement/
+|   |   |   |-- ProjectList.js
+|   |   |   |-- CreateProject.js
+|   |   |-- Settings/
+|   |   |   |-- SettingsPage.js
+|   |-- services/
+|   |   |-- groqAPI.js
+|   |   |-- localStorage.js
+|   |-- styles/
+|   |   |-- tailwind.css
+|   |   |-- main.css
+|   |-- App.js
+|   |-- index.js
+|-- package.json
+|-- README.md
 
-Follow these steps:
+### **Structure Breakdown**
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+* **`public/`**: Contains the main HTML file and any static assets.
+* **`src/`**: The main source code of the application.
+    * **`components/`**: Reusable UI components.
+        * **`AIAssistant/`**: Components related to the AI chat and history.
+        * **`CodeRenderer/`**: The component for rendering AI-generated code.
+        * **`Layout/`**: Components for the main application layout, including the header, sidebar, and footer.
+        * **`ProjectManagement/`**: Components for creating, listing, and deleting projects.
+        * **`Settings/`**: The component for the AI settings page.
+    * **`services/`**: Modules for handling external services and local storage.
+        * **`groqAPI.js`**: Functions for interacting with the Groq API.
+        * **`localStorage.js`**: Helper functions for managing data in local storage.
+    * **`styles/`**: CSS files, including Tailwind CSS and any custom styles.
+    * **`App.js`**: The main application component.
+    * **`index.js`**: The entry point of the application.
+* **`package.json`**: Project dependencies and scripts.
+* **`README.md`**: This file.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+This modular structure promotes a clean separation of concerns, making it easy to maintain and scale the application over time.
 
-# Step 3: Install the necessary dependencies.
-npm i
+## **Getting Started**
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/benneberg/groq-ai-code-craft.git]
+    ```
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+3.  **Set up your Groq API key:**
+    * Create a `.env` file in the root of the project.
+    * Add your Groq API key to the `.env` file:
+        ```
+        REACT_APP_GROQ_API_KEY=your_api_key_here
+        ```
+4.  **Start the development server:**
+    ```bash
+    npm start
+    ```
 
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/0172e4c7-2800-4362-9313-753d1fb558c2) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Now you can open your browser and start using the **AI Developer Toolbox** to accelerate your development workflow!
