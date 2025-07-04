@@ -1,4 +1,4 @@
-import { AISettings } from "@/components/Settings/SettingsPage";
+import { AISettings } from "@/types";
 
 export interface GroqMessage {
   role: 'system' | 'user' | 'assistant';

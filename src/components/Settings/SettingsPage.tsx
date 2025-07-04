@@ -8,15 +8,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { ArrowLeft, Settings, Key, Brain, Zap } from "lucide-react";
-
-export interface AISettings {
-  apiKey: string;
-  model: string;
-  temperature: number;
-  maxTokens: number;
-  systemPrompt: string;
-  enableStreaming: boolean;
-}
+import { AISettings } from "@/types";
 
 interface SettingsPageProps {
   settings: AISettings;

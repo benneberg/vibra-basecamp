@@ -1,6 +1,4 @@
-import { Project } from "@/components/ProjectManagement/ProjectList";
-import { ChatMessage } from "@/components/AIAssistant/ChatView";
-import { AISettings } from "@/components/Settings/SettingsPage";
+import { Project, ChatMessage, AISettings } from "@/types";
 
 const STORAGE_KEYS = {
   PROJECTS: 'ai-toolbox-projects',

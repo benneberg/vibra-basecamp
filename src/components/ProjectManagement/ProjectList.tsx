@@ -4,14 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-export interface Project {
-  id: string;
-  name: string;
-  description?: string;
-  createdAt: Date;
-  lastModified: Date;
-  messageCount: number;
-}
+import { Project } from "@/types";
 
 interface ProjectListProps {
   projects: Project[];

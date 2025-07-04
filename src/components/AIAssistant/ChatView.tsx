@@ -6,13 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Send, User, Bot, Code, Palette, Bug, FileText, Paperclip } from "lucide-react";
 
-export interface ChatMessage {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
-  type?: 'code' | 'debug' | 'design' | 'documentation';
-}
+import { ChatMessage } from "@/types";
 
 interface ChatViewProps {
   messages: ChatMessage[];

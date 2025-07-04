@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Copy, CheckCircle, Download } from "lucide-react";
-import { ChatView, ChatMessage } from "@/components/AIAssistant/ChatView";
+import { ChatView } from "@/components/AIAssistant/ChatView";
+import { ChatMessage } from "@/types";
 import { WorkflowStage } from "./WorkflowSection";
 import { useToast } from "@/hooks/use-toast";
 
