@@ -17,11 +17,7 @@ export const AppLayout = () => {
   const [aiSettings, setAISettings] = useState(LocalStorageService.getAISettings());
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (currentProject) {
-      navigateToChat();
-    }
-  }, [currentProject, navigateToChat]);
+  // Remove automatic navigation to prevent navigation conflicts
 
   const handleCreateProject = async (name: string, description?: string) => {
     await createProject(name, description);
@@ -36,7 +32,6 @@ export const AppLayout = () => {
   const handleUpdateSettings = (newSettings: any) => {
     setAISettings(newSettings);
     LocalStorageService.saveAISettings(newSettings);
-    navigateToChat();
     
     toast({
       title: "Settings saved",
@@ -84,7 +79,7 @@ export const AppLayout = () => {
         return <WorkflowSection />;
       
       case 'prompts':
-        return <PromptEngineering />;
+        return <PromptEngineering aiSettings={aiSettings} />;
       
       default:
         return null;

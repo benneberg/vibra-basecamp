@@ -1,21 +1,30 @@
 import { useState } from "react";
-import { PromptTemplate } from "@/types";
+import { PromptTemplate, AISettings } from "@/types";
 import { usePrompts } from "@/hooks/usePrompts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PromptLibrary } from "./PromptLibrary";
 import { PromptEditor } from "./PromptEditor";
-import { BookOpen, Plus, Library, Edit } from "lucide-react";
+import { PromptGenerator } from "./PromptGenerator";
+import { BookOpen, Plus, Library, Edit, Sparkles } from "lucide-react";
 
-export const PromptEngineering = () => {
+interface PromptEngineeringProps {
+  aiSettings: AISettings;
+}
+
+export const PromptEngineering = ({ aiSettings }: PromptEngineeringProps) => {
   const { prompts, tags, loading, createPrompt, updatePrompt, deletePrompt, toggleFavorite, createTag } = usePrompts();
-  const [currentView, setCurrentView] = useState<'library' | 'editor'>('library');
+  const [currentView, setCurrentView] = useState<'library' | 'editor' | 'generator'>('library');
   const [editingPrompt, setEditingPrompt] = useState<PromptTemplate | undefined>();
 
   const handleCreateNew = () => {
     setEditingPrompt(undefined);
     setCurrentView('editor');
+  };
+
+  const handleGeneratePrompt = () => {
+    setCurrentView('generator');
   };
 
   const handleEdit = (prompt: PromptTemplate) => {
@@ -36,6 +45,11 @@ export const PromptEngineering = () => {
   const handleCancel = () => {
     setCurrentView('library');
     setEditingPrompt(undefined);
+  };
+
+  const handleGeneratedPromptSave = (promptData: Omit<PromptTemplate, 'id' | 'createdAt' | 'lastModified'>) => {
+    createPrompt(promptData);
+    setCurrentView('library');
   };
 
   const handleDelete = (id: string) => {
@@ -73,13 +87,23 @@ export const PromptEngineering = () => {
               </div>
             </div>
             {currentView === 'library' && (
-              <Button
-                onClick={handleCreateNew}
-                className="glass-hover"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                New Prompt
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleGeneratePrompt}
+                  className="glass-hover"
+                  variant="outline"
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  AI Generate
+                </Button>
+                <Button
+                  onClick={handleCreateNew}
+                  className="glass-hover"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  New Prompt
+                </Button>
+              </div>
             )}
           </div>
         </CardHeader>
@@ -128,11 +152,19 @@ export const PromptEngineering = () => {
           onDelete={handleDelete}
           onToggleFavorite={toggleFavorite}
         />
-      ) : (
+      ) : currentView === 'editor' ? (
         <PromptEditor
           prompt={editingPrompt}
           tags={tags}
           onSave={handleSave}
+          onCancel={handleCancel}
+          onCreateTag={createTag}
+        />
+      ) : (
+        <PromptGenerator
+          aiSettings={aiSettings}
+          tags={tags}
+          onSave={handleGeneratedPromptSave}
           onCancel={handleCancel}
           onCreateTag={createTag}
         />
