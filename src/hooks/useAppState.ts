@@ -9,6 +9,7 @@ export const useAppState = () => {
   const navigateToChat = () => setCurrentView('chat');
   const navigateToSettings = () => setCurrentView('settings');
   const navigateToWorkflow = () => setCurrentView('workflow');
+  const navigateToPrompts = () => setCurrentView('prompts');
 
   return {
     currentView,
@@ -17,5 +18,6 @@ export const useAppState = () => {
     navigateToChat,
     navigateToSettings,
     navigateToWorkflow,
+    navigateToPrompts,
   };
 };

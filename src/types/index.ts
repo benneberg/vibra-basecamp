@@ -24,4 +24,23 @@ export interface ChatMessage {
   type?: 'code' | 'debug' | 'design' | 'documentation';
 }
 
-export type AppView = 'projects' | 'create-project' | 'chat' | 'settings' | 'workflow';
+export interface PromptTemplate {
+  id: string;
+  title: string;
+  tags: string[];
+  type: 'user' | 'system';
+  targetModel: string;
+  description: string;
+  content: string;
+  isFavorite: boolean;
+  createdAt: Date;
+  lastModified: Date;
+}
+
+export interface PromptTag {
+  id: string;
+  name: string;
+  color: string;
+}
+
+export type AppView = 'projects' | 'create-project' | 'chat' | 'settings' | 'workflow' | 'prompts';

@@ -6,12 +6,13 @@ import { CreateProject } from "@/components/ProjectManagement/CreateProject";
 import { ChatContainer } from "@/components/Chat/ChatContainer";
 import { SettingsPage } from "@/components/Settings/SettingsPage";
 import { WorkflowSection } from "@/components/Workflow/WorkflowSection";
+import { PromptEngineering } from "@/components/PromptEngineering/PromptEngineering";
 import { LocalStorageService } from "@/services/localStorage";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 export const AppLayout = () => {
-  const { currentView, navigateToProjects, navigateToCreateProject, navigateToChat, navigateToSettings, navigateToWorkflow } = useAppState();
+  const { currentView, navigateToProjects, navigateToCreateProject, navigateToChat, navigateToSettings, navigateToWorkflow, navigateToPrompts } = useAppState();
   const { projects, currentProject, createProject, selectProject, deleteProject } = useProjects();
   const [aiSettings, setAISettings] = useState(LocalStorageService.getAISettings());
   const { toast } = useToast();
@@ -82,6 +83,9 @@ export const AppLayout = () => {
       case 'workflow':
         return <WorkflowSection />;
       
+      case 'prompts':
+        return <PromptEngineering />;
+      
       default:
         return null;
     }
@@ -94,6 +98,8 @@ export const AppLayout = () => {
         onCreateProject={navigateToCreateProject}
         onOpenSettings={navigateToSettings}
         onOpenWorkflow={navigateToWorkflow}
+        onNavigateHome={navigateToProjects}
+        onOpenPrompts={navigateToPrompts}
       />
       
       <main className="flex-1 overflow-hidden">
