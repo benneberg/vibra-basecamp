@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PromptLibrary } from "./PromptLibrary";
 import { PromptEditor } from "./PromptEditor";
 import { PromptGenerator } from "./PromptGenerator";
+import { PromptOptimizer } from "./PromptOptimizer";
 import { BookOpen, Plus, Library, Edit, Sparkles } from "lucide-react";
 
 interface PromptEngineeringProps {
@@ -15,8 +16,9 @@ interface PromptEngineeringProps {
 
 export const PromptEngineering = ({ aiSettings }: PromptEngineeringProps) => {
   const { prompts, tags, loading, createPrompt, updatePrompt, deletePrompt, toggleFavorite, createTag } = usePrompts();
-  const [currentView, setCurrentView] = useState<'library' | 'editor' | 'generator'>('library');
+  const [currentView, setCurrentView] = useState<'library' | 'editor' | 'generator' | 'optimizer'>('library');
   const [editingPrompt, setEditingPrompt] = useState<PromptTemplate | undefined>();
+  const [optimizingPrompt, setOptimizingPrompt] = useState<PromptTemplate | undefined>();
 
   const handleCreateNew = () => {
     setEditingPrompt(undefined);
@@ -32,6 +34,11 @@ export const PromptEngineering = ({ aiSettings }: PromptEngineeringProps) => {
     setCurrentView('editor');
   };
 
+  const handleOptimize = (prompt: PromptTemplate) => {
+    setOptimizingPrompt(prompt);
+    setCurrentView('optimizer');
+  };
+
   const handleSave = (promptData: Omit<PromptTemplate, 'id' | 'createdAt' | 'lastModified'>) => {
     if (editingPrompt) {
       updatePrompt(editingPrompt.id, promptData);
@@ -45,6 +52,7 @@ export const PromptEngineering = ({ aiSettings }: PromptEngineeringProps) => {
   const handleCancel = () => {
     setCurrentView('library');
     setEditingPrompt(undefined);
+    setOptimizingPrompt(undefined);
   };
 
   const handleGeneratedPromptSave = (promptData: Omit<PromptTemplate, 'id' | 'createdAt' | 'lastModified'>) => {
@@ -55,6 +63,14 @@ export const PromptEngineering = ({ aiSettings }: PromptEngineeringProps) => {
   const handleDelete = (id: string) => {
     if (confirm('Are you sure you want to delete this prompt?')) {
       deletePrompt(id);
+    }
+  };
+
+  const handleOptimizedPromptSave = (content: string) => {
+    if (optimizingPrompt) {
+      updatePrompt(optimizingPrompt.id, { ...optimizingPrompt, content });
+      setCurrentView('library');
+      setOptimizingPrompt(undefined);
     }
   };
 
@@ -151,6 +167,7 @@ export const PromptEngineering = ({ aiSettings }: PromptEngineeringProps) => {
           onEdit={handleEdit}
           onDelete={handleDelete}
           onToggleFavorite={toggleFavorite}
+          onOptimize={handleOptimize}
         />
       ) : currentView === 'editor' ? (
         <PromptEditor
@@ -160,13 +177,20 @@ export const PromptEngineering = ({ aiSettings }: PromptEngineeringProps) => {
           onCancel={handleCancel}
           onCreateTag={createTag}
         />
-      ) : (
+      ) : currentView === 'generator' ? (
         <PromptGenerator
           aiSettings={aiSettings}
           tags={tags}
           onSave={handleGeneratedPromptSave}
           onCancel={handleCancel}
           onCreateTag={createTag}
+        />
+      ) : (
+        <PromptOptimizer
+          prompt={optimizingPrompt!}
+          aiSettings={aiSettings}
+          onOptimizedPromptSave={handleOptimizedPromptSave}
+          onClose={handleCancel}
         />
       )}
     </div>

@@ -4,16 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft, Sparkles, Github } from "lucide-react";
 
 interface CreateProjectProps {
-  onCreateProject: (name: string, description?: string) => void;
+  onCreateProject: (name: string, description?: string, githubUrl?: string) => void;
   onBack: () => void;
 }
 
 export const CreateProject = ({ onCreateProject, onBack }: CreateProjectProps) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [githubUrl, setGithubUrl] = useState("");
   const [isCreating, setIsCreating] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -22,7 +23,7 @@ export const CreateProject = ({ onCreateProject, onBack }: CreateProjectProps) =
 
     setIsCreating(true);
     try {
-      await onCreateProject(name.trim(), description.trim() || undefined);
+      await onCreateProject(name.trim(), description.trim() || undefined, githubUrl.trim() || undefined);
     } finally {
       setIsCreating(false);
     }
@@ -72,6 +73,23 @@ export const CreateProject = ({ onCreateProject, onBack }: CreateProjectProps) =
                 className="glass min-h-[100px]"
                 rows={4}
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="githubUrl" className="flex items-center gap-2">
+                <Github className="w-4 h-4" />
+                GitHub Repository (optional)
+              </Label>
+              <Input
+                id="githubUrl"
+                value={githubUrl}
+                onChange={(e) => setGithubUrl(e.target.value)}
+                placeholder="https://github.com/username/repository"
+                className="glass"
+              />
+              <p className="text-xs text-muted-foreground">
+                Add a public GitHub repository to enable AI code analysis and assistance
+              </p>
             </div>
 
             <div className="flex gap-3 pt-4">

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heart, Search, Edit, Trash2, Copy, Tag, Filter } from "lucide-react";
+import { Heart, Search, Edit, Trash2, Copy, Tag, Filter, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface PromptLibraryProps {
@@ -15,9 +15,10 @@ interface PromptLibraryProps {
   onEdit: (prompt: PromptTemplate) => void;
   onDelete: (id: string) => void;
   onToggleFavorite: (id: string) => void;
+  onOptimize: (prompt: PromptTemplate) => void;
 }
 
-export const PromptLibrary = ({ prompts, tags, onEdit, onDelete, onToggleFavorite }: PromptLibraryProps) => {
+export const PromptLibrary = ({ prompts, tags, onEdit, onDelete, onToggleFavorite, onOptimize }: PromptLibraryProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTag, setSelectedTag] = useState<string>("all");
   const [selectedType, setSelectedType] = useState<string>("all");
@@ -195,6 +196,14 @@ export const PromptLibrary = ({ prompts, tags, onEdit, onDelete, onToggleFavorit
                       className="glass-hover"
                     >
                       <Copy className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onOptimize(prompt)}
+                      className="glass-hover"
+                    >
+                      <Sparkles className="w-4 h-4" />
                     </Button>
                     <Button
                       variant="ghost"

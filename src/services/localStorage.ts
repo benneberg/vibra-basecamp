@@ -51,11 +51,12 @@ export class LocalStorageService {
     }
   }
 
-  static createProject(name: string, description?: string): Project {
+  static createProject(name: string, description?: string, githubUrl?: string): Project {
     const newProject: Project = {
       id: crypto.randomUUID(),
       name,
       description,
+      githubUrl,
       createdAt: new Date(),
       lastModified: new Date(),
       messageCount: 0,

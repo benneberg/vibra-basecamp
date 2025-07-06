@@ -18,9 +18,9 @@ export const useProjects = () => {
     }
   }, []);
 
-  const createProject = async (name: string, description?: string) => {
+  const createProject = async (name: string, description?: string, githubUrl?: string) => {
     try {
-      const newProject = LocalStorageService.createProject(name, description);
+      const newProject = LocalStorageService.createProject(name, description, githubUrl);
       setProjects(prev => [newProject, ...prev.filter(p => p.id !== newProject.id)]);
       setCurrentProject(newProject);
       LocalStorageService.setCurrentProject(newProject.id);

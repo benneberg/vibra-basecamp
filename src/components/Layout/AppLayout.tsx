@@ -19,8 +19,8 @@ export const AppLayout = () => {
 
   // Remove automatic navigation to prevent navigation conflicts
 
-  const handleCreateProject = async (name: string, description?: string) => {
-    await createProject(name, description);
+  const handleCreateProject = async (name: string, description?: string, githubUrl?: string) => {
+    await createProject(name, description, githubUrl);
     navigateToChat();
   };
 
