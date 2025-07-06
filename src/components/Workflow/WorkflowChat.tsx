@@ -1,3 +1,10 @@
+// Fallback UUID v4 generator
+function uuidv4(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -18,7 +25,7 @@ interface WorkflowChatProps {
 export const WorkflowChat = ({ stage, onBack, onComplete, isCompleted }: WorkflowChatProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
-      id: crypto.randomUUID(),
+      id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : uuidv4(),
       role: 'assistant',
       content: `Welcome to the ${stage.title} stage! I'm specialized in ${stage.description.toLowerCase()}. How can I help you with this stage of your project?`,
       timestamp: new Date(),
@@ -32,7 +39,7 @@ export const WorkflowChat = ({ stage, onBack, onComplete, isCompleted }: Workflo
 
   const handleSendMessage = async (message: string) => {
     const userMessage: ChatMessage = {
-      id: crypto.randomUUID(),
+      id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : uuidv4(),
       role: 'user',
       content: message,
       timestamp: new Date(),
@@ -46,7 +53,7 @@ export const WorkflowChat = ({ stage, onBack, onComplete, isCompleted }: Workflo
     // Simulate AI response (replace with actual API call)
     setTimeout(() => {
       const aiResponse: ChatMessage = {
-        id: crypto.randomUUID(),
+        id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : uuidv4(),
         role: 'assistant',
         content: `This is a simulated response for the ${stage.title} stage. In a real implementation, this would connect to your AI service with the specialized system prompt: "${stage.systemPrompt}"`,
         timestamp: new Date(),

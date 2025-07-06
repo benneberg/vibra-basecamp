@@ -1,3 +1,10 @@
+// Fallback UUID v4 generator
+function uuidv4(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 import { useState, useEffect } from "react";
 import { LocalStorageService } from "@/services/localStorage";
 import { GroqAPIService, GroqMessage } from "@/services/groqAPI";
@@ -51,7 +58,7 @@ export const useChat = (projectId: string | null, aiSettings: AISettings) => {
     if (!projectId) return;
 
     const userMessage: ChatMessage = {
-      id: crypto.randomUUID(),
+      id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : uuidv4(),
       role: 'user',
       content: message,
       timestamp: new Date(),
@@ -80,7 +87,7 @@ export const useChat = (projectId: string | null, aiSettings: AISettings) => {
 
       if (aiSettings.enableStreaming) {
         const assistantMessage: ChatMessage = {
-          id: crypto.randomUUID(),
+          id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : uuidv4(),
           role: 'assistant',
           content: '',
           timestamp: new Date(),
@@ -107,7 +114,7 @@ export const useChat = (projectId: string | null, aiSettings: AISettings) => {
         responseContent = await groqAPI.sendMessage(apiMessages, aiSettings);
         
         const assistantMessage: ChatMessage = {
-          id: crypto.randomUUID(),
+          id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : uuidv4(),
           role: 'assistant',
           content: responseContent,
           timestamp: new Date(),

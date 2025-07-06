@@ -1,3 +1,10 @@
+// Fallback UUID v4 generator
+function uuidv4(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 import { PromptTemplate, PromptTag } from "@/types";
 
 const STORAGE_KEYS = {
@@ -75,7 +82,7 @@ export class PromptService {
   static createPrompt(promptData: Omit<PromptTemplate, 'id' | 'createdAt' | 'lastModified'>): PromptTemplate {
     const newPrompt: PromptTemplate = {
       ...promptData,
-      id: crypto.randomUUID(),
+      id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : uuidv4(),
       createdAt: new Date(),
       lastModified: new Date(),
     };
@@ -143,7 +150,7 @@ export class PromptService {
 
   static createTag(name: string, color: string): PromptTag {
     const newTag: PromptTag = {
-      id: crypto.randomUUID(),
+      id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : uuidv4(),
       name,
       color,
     };
