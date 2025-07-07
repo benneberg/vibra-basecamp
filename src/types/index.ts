@@ -15,6 +15,35 @@ export interface Project {
   createdAt: Date;
   lastModified: Date;
   messageCount: number;
+  contextSources?: ContextSource[];
+}
+
+export interface ContextSource {
+  id: string;
+  type: 'github' | 'url' | 'file';
+  source: string;
+  title: string;
+  status: 'loading' | 'ready' | 'error';
+  chunks: ContextChunk[];
+  metadata?: {
+    fileType?: string;
+    size?: number;
+    lastFetched?: Date;
+  };
+}
+
+export interface ContextChunk {
+  id: string;
+  content: string;
+  metadata: {
+    source: string;
+    type: 'code' | 'documentation' | 'text';
+    language?: string;
+    filePath?: string;
+    startLine?: number;
+    endLine?: number;
+  };
+  tokens: number;
 }
 
 export interface ChatMessage {

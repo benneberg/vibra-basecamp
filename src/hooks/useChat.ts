@@ -9,9 +9,10 @@ import { useState, useEffect } from "react";
 import { LocalStorageService } from "@/services/localStorage";
 import { GroqAPIService, GroqMessage } from "@/services/groqAPI";
 import { useToast } from "@/hooks/use-toast";
-import { ChatMessage, AISettings } from "@/types";
+import { ChatMessage, AISettings, ContextSource } from "@/types";
+import { ContextService } from "@/services/contextService";
 
-export const useChat = (projectId: string | null, aiSettings: AISettings) => {
+export const useChat = (projectId: string | null, aiSettings: AISettings, contextSources: ContextSource[] = []) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [generatedCode, setGeneratedCode] = useState<{
@@ -72,10 +73,28 @@ export const useChat = (projectId: string | null, aiSettings: AISettings) => {
     setIsLoading(true);
 
     try {
+      // Get relevant context chunks
+      const relevantContext = ContextService.getRelevantContext(message, contextSources, 3000);
+      
+      // Build context-aware system prompt
+      let contextPrompt = aiSettings.systemPrompt;
+      
+      if (relevantContext.length > 0) {
+        contextPrompt += `\n\nRelevant project context:\n`;
+        relevantContext.forEach((chunk, index) => {
+          contextPrompt += `\n--- Context ${index + 1} (${chunk.metadata.type}) ---\n`;
+          if (chunk.metadata.filePath) {
+            contextPrompt += `File: ${chunk.metadata.filePath}\n`;
+          }
+          contextPrompt += `${chunk.content}\n`;
+        });
+        contextPrompt += `\n--- End Context ---\n\nUse the above context when relevant to answer the user's question or help with their request.`;
+      }
+
       const apiMessages: GroqMessage[] = [
         {
           role: 'system',
-          content: aiSettings.systemPrompt,
+          content: contextPrompt,
         },
         ...updatedMessages.slice(-10).map(msg => ({
           role: msg.role as 'user' | 'assistant',

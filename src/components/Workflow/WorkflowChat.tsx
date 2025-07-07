@@ -50,19 +50,53 @@ export const WorkflowChat = ({ stage, onBack, onComplete, isCompleted }: Workflo
     setMessages(updatedMessages);
     setIsLoading(true);
 
-    // Simulate AI response (replace with actual API call)
-    setTimeout(() => {
+    try {
+      // Use actual AI integration instead of simulation
+      const aiSettings = {
+        apiKey: localStorage.getItem('groq-api-key') || '',
+        model: 'llama3-8b-8192',
+        temperature: 0.7,
+        maxTokens: 2048,
+        systemPrompt: stage.systemPrompt,
+        enableStreaming: false,
+      };
+
+      if (!aiSettings.apiKey) {
+        throw new Error('Please configure your Groq API key in settings');
+      }
+
+      const groqAPI = new (await import('@/services/groqAPI')).GroqAPIService();
+      const apiMessages = [
+        { role: 'system' as const, content: stage.systemPrompt },
+        ...updatedMessages.slice(-5).map(msg => ({
+          role: msg.role as 'user' | 'assistant',
+          content: msg.content,
+        })),
+      ];
+
+      const responseContent = await groqAPI.sendMessage(apiMessages, aiSettings);
+      
       const aiResponse: ChatMessage = {
         id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : uuidv4(),
         role: 'assistant',
-        content: `This is a simulated response for the ${stage.title} stage. In a real implementation, this would connect to your AI service with the specialized system prompt: "${stage.systemPrompt}"`,
+        content: responseContent,
         timestamp: new Date(),
         type: stage.id as any,
       };
 
       setMessages(prev => [...prev, aiResponse]);
+    } catch (error) {
+      const errorMessage: ChatMessage = {
+        id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : uuidv4(),
+        role: 'assistant',
+        content: `Error: ${error instanceof Error ? error.message : 'Failed to get AI response'}. Please check your API key in settings.`,
+        timestamp: new Date(),
+        type: stage.id as any,
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleCopyOutput = () => {

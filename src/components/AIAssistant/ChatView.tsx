@@ -5,20 +5,24 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Send, User, Bot, Code, Palette, Bug, FileText, Paperclip } from "lucide-react";
-
+import { useToast } from "@/hooks/use-toast";
 import { ChatMessage } from "@/types";
+import { CodeArtifact } from "@/components/CodeRenderer/CodeArtifact";
 
 interface ChatViewProps {
   messages: ChatMessage[];
   onSendMessage: (message: string, type?: string) => void;
   isLoading?: boolean;
+  onFileUpload?: (files: FileList) => void;
 }
 
-export const ChatView = ({ messages, onSendMessage, isLoading }: ChatViewProps) => {
+export const ChatView = ({ messages, onSendMessage, isLoading, onFileUpload }: ChatViewProps) => {
   const [message, setMessage] = useState("");
   const [selectedType, setSelectedType] = useState<string | undefined>();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
   const actionTypes = [
     { id: 'code', label: 'Generate Code', icon: Code, color: 'text-primary' },
@@ -38,6 +42,30 @@ export const ChatView = ({ messages, onSendMessage, isLoading }: ChatViewProps) 
     onSendMessage(message.trim(), selectedType);
     setMessage("");
     setSelectedType(undefined);
+  };
+
+  const extractCodeFromMessage = (content: string, language: string) => {
+    const regex = new RegExp(`\`\`\`${language}\\n([\\s\\S]*?)\\n\`\`\``, 'i');
+    const match = content.match(regex);
+    return match ? match[1].trim() : undefined;
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      if (onFileUpload) {
+        onFileUpload(files);
+      } else {
+        toast({
+          title: "File Upload",
+          description: "File upload functionality will be available when context management is active.",
+          variant: "default",
+        });
+      }
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const getMessageIcon = (role: string, type?: string) => {
@@ -113,6 +141,15 @@ export const ChatView = ({ messages, onSendMessage, isLoading }: ChatViewProps) 
                       <div className="text-sm whitespace-pre-wrap break-words">
                         {msg.content}
                       </div>
+                      {msg.role === 'assistant' && (msg.content.includes('```html') || msg.content.includes('```css') || msg.content.includes('```javascript')) && (
+                        <div className="mt-3">
+                          <CodeArtifact 
+                            html={extractCodeFromMessage(msg.content, 'html')}
+                            css={extractCodeFromMessage(msg.content, 'css')}
+                            js={extractCodeFromMessage(msg.content, 'javascript')}
+                          />
+                        </div>
+                      )}
                       <div className="text-xs text-muted-foreground mt-2">
                         {msg.timestamp.toLocaleTimeString()}
                       </div>
@@ -161,9 +198,18 @@ export const ChatView = ({ messages, onSendMessage, isLoading }: ChatViewProps) 
               variant="ghost"
               size="sm"
               className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0"
+              onClick={() => fileInputRef.current?.click()}
             >
               <Paperclip className="w-4 h-4" />
             </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept=".pdf,.md,.txt,.docx"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
           </div>
           <Button
             type="submit"
