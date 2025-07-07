@@ -1,3 +1,19 @@
+// Map workflow stage id to ChatMessage type
+function getChatMessageType(stageId: string): 'code' | 'debug' | 'design' | 'documentation' | undefined {
+  switch (stageId) {
+    case 'development':
+    case 'ideation':
+    case 'specification':
+    case 'launch':
+      return 'code';
+    case 'design':
+      return 'design';
+    case 'documentation':
+      return 'documentation';
+    default:
+      return undefined;
+  }
+}
 // Fallback UUID v4 generator
 function uuidv4(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -6,6 +22,7 @@ function uuidv4(): string {
   });
 }
 import { useState } from "react";
+import { LocalStorageService } from "@/services/localStorage";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -29,7 +46,7 @@ export const WorkflowChat = ({ stage, onBack, onComplete, isCompleted }: Workflo
       role: 'assistant',
       content: `Welcome to the ${stage.title} stage! I'm specialized in ${stage.description.toLowerCase()}. How can I help you with this stage of your project?`,
       timestamp: new Date(),
-      type: stage.id as any,
+      type: getChatMessageType(stage.id),
     }
   ]);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +60,7 @@ export const WorkflowChat = ({ stage, onBack, onComplete, isCompleted }: Workflo
       role: 'user',
       content: message,
       timestamp: new Date(),
-      type: stage.id as any,
+      type: getChatMessageType(stage.id),
     };
 
     const updatedMessages = [...messages, userMessage];
@@ -52,15 +69,8 @@ export const WorkflowChat = ({ stage, onBack, onComplete, isCompleted }: Workflo
 
     try {
       // Use actual AI integration instead of simulation
-      const aiSettings = {
-        apiKey: localStorage.getItem('groq-api-key') || '',
-        model: 'llama3-8b-8192',
-        temperature: 0.7,
-        maxTokens: 2048,
-        systemPrompt: stage.systemPrompt,
-        enableStreaming: false,
-      };
-
+      const aiSettings = LocalStorageService.getAISettings();
+      aiSettings.systemPrompt = stage.systemPrompt;
       if (!aiSettings.apiKey) {
         throw new Error('Please configure your Groq API key in settings');
       }
@@ -81,7 +91,7 @@ export const WorkflowChat = ({ stage, onBack, onComplete, isCompleted }: Workflo
         role: 'assistant',
         content: responseContent,
         timestamp: new Date(),
-        type: stage.id as any,
+        type: getChatMessageType(stage.id),
       };
 
       setMessages(prev => [...prev, aiResponse]);
@@ -91,7 +101,7 @@ export const WorkflowChat = ({ stage, onBack, onComplete, isCompleted }: Workflo
         role: 'assistant',
         content: `Error: ${error instanceof Error ? error.message : 'Failed to get AI response'}. Please check your API key in settings.`,
         timestamp: new Date(),
-        type: stage.id as any,
+        type: getChatMessageType(stage.id),
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
